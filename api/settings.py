@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_swagger',
     'drf_yasg',
@@ -44,7 +45,6 @@ INSTALLED_APPS = [
     'customer.apps.CustomerConfig',
     'showroom.apps.ShowroomConfig',
     'car.apps.CarConfig',
-    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [

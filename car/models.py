@@ -1,31 +1,25 @@
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.utils import timezone
+
+from customer.models import DateMixin, IsActiveMixin
 
 
-class Car(models.Model):
-    class MODELS(models.TextChoices):
-        Audi = 'audi'
-        BMW = 'bmw'
-        MERCEDES = 'mercedes'
-        LEXUS = 'lexus'
-
-    class COLORS(models.TextChoices):
-        BLACK = 'black'
-        RED = 'red'
-        YELLOW = 'yellow'
-        GREEN = 'green'
-
+class Car(DateMixin, IsActiveMixin):
     class POWER(models.TextChoices):
-        POWER1 = 120
-        POWER2 = 200
-        POWER3 = 350
-        POWER4 = 420
+        HORSES120 = 120
+        HORSES200 = 200
+        HORSES350 = 350
+        HORSES420 = 420
 
-    model = models.CharField(choices=MODELS.choices, max_length=15, blank=True)
-    color = models.CharField(choices=COLORS.choices, max_length=15, blank=True)
+    model = models.ForeignKey('Model', on_delete=models.CASCADE)
+    color = models.ForeignKey('Color', on_delete=models.CASCADE)
     power = models.CharField(choices=POWER.choices, max_length=15, blank=True)
-    price = models.SmallIntegerField(validators=[MinValueValidator(0)], blank=True)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateField(auto_now=True)
-    updated_at = models.DateField(auto_now_add=True)
+    price = models.DecimalField(validators=[MinValueValidator(0)], blank=True, decimal_places=0, max_digits=6)
+
+
+class Model(models.Model):
+    title = models.CharField(max_length=50)
+
+
+class Color(models.Model):
+    title = models.CharField(max_length=50)

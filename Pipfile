@@ -8,10 +8,15 @@ django = "*"
 djangorestframework = "*"
 psycopg2 = "*"
 django-countries = "*"
+<<<<<<< HEAD
 djangorestframework-simplejwt = "*"
 django-rest-swagger = "*"
 drf-yasg = "*"
 django-filter = "*"
+=======
+isort = "*"
+flake8 = "*"
+>>>>>>> dev
 
 [dev-packages]
 
