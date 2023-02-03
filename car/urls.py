@@ -1,10 +1,8 @@
-from django.contrib import admin
-from django.urls import path, re_path
 from rest_framework import routers
 
-from car.views import ModelViewSet
+from car.views import CarViewSet
 
 router = routers.SimpleRouter()
-router.register(r'cars', ModelViewSet)
+router.register(r'cars', CarViewSet)
 
 urlpatterns = router.urls

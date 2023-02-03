@@ -11,13 +11,14 @@ class Car(DateMixin, IsActiveMixin):
         HORSES350 = 350
         HORSES420 = 420
 
-    model = models.ForeignKey('Model', on_delete=models.CASCADE)
+    name = models.CharField(max_length=15)
+    model = models.ForeignKey('ModelName', on_delete=models.CASCADE)
     color = models.ForeignKey('Color', on_delete=models.CASCADE)
     power = models.CharField(choices=POWER.choices, max_length=15, blank=True)
     price = models.DecimalField(validators=[MinValueValidator(0)], blank=True, decimal_places=0, max_digits=6)
 
 
-class Model(models.Model):
+class ModelName(models.Model):
     title = models.CharField(max_length=50)
 
 
