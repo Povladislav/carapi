@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from showroom.models import ShowRoom
+from showroom.models import SalesForCustomer, ShowRoom
 
-admin.site.register(ShowRoom)
+admin.site.register([ShowRoom, SalesForCustomer])
