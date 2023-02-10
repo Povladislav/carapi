@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-from showroom.models import (AvailableCar, Discount, History, PreferableCar,
-                             ShowRoom)
+from showroom.models import Discount, History, ShowRoom
 
-admin.site.register([ShowRoom, AvailableCar, PreferableCar, History, Discount])
+admin.site.register([ShowRoom, History, Discount])

@@ -1,12 +1,14 @@
 from rest_framework import serializers
 
-from car.models import Car, ModelName
+from car.models import AvailableCar
 
 
 class CarSerializer(serializers.ModelSerializer):
-    model = serializers.CharField(source='model.title')
-    color = serializers.CharField(source='color.title')
+    name = serializers.CharField(source='available_car.name', read_only=True)
 
     class Meta:
-        model = Car
-        fields = ['name', 'model', 'color', 'power', 'price']
+        model = AvailableCar
+        fields = ['available_car', 'count', 'price', 'name']
+        extra_kwargs = {
+            'available_car': {'write_only': True}
+        }

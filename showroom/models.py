@@ -11,7 +11,7 @@ class ShowRoom(IsActiveMixin, DateMixin):
     country = CountryField()
     balance = models.DecimalField(max_digits=8, decimal_places=0, validators=[MinValueValidator(0)])
     year_of_establishment = models.DateTimeField()
-    preferable_cars = models.ManyToManyField('PreferableCar', related_name='preferable_cars', blank=True)
+    preferable_cars = models.ManyToManyField('car.PreferableCar', related_name='preferable_cars', blank=True)
     history = models.ManyToManyField('History', related_name='history_of_sells', blank=True)
     discount = models.ManyToManyField('Discount', related_name='discount_for_customer', blank=True)
 
@@ -30,28 +30,6 @@ class History(IsActiveMixin, DateMixin):
 
     def __str__(self):
         return f'History{self.id}'
-
-
-class AvailableCar(IsActiveMixin, DateMixin):
-    available_car = models.ForeignKey('car.Car', on_delete=models.CASCADE)
-    count = models.SmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(20)])
-    showroom = models.ForeignKey(ShowRoom, on_delete=models.CASCADE, related_name='available_cars_for_showroom',
-                                 null=True)
-    producer = models.ForeignKey('producer.Producer', on_delete=models.CASCADE,
-                                 related_name='available_cars_for_producer', null=True)
-    price = models.DecimalField(max_digits=6, decimal_places=0, validators=[MinValueValidator(0)])
-
-    def __str__(self):
-        return self.available_car.name
-
-
-class PreferableCar(IsActiveMixin, DateMixin):
-    preferable_car = models.ForeignKey('car.Car', on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=6, decimal_places=0)
-    count = models.DecimalField(max_digits=2, decimal_places=0)
-
-    def __str__(self):
-        return self.preferable_car.name
 
 
 class Discount(IsActiveMixin, DateMixin):
