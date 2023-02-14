@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from customer.models import User
+from customer.models import Location, User
 
-admin.site.register(User)
+admin.site.register([User, Location])

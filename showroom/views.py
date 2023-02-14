@@ -18,7 +18,6 @@ class SRFilter(FilterSet):
 
 class ShowRoomViewSet(ModelViewSet):
     queryset = ShowRoom.objects.all()
-    permission_classes = [AllowAny]  # FOR TEST ITS [ALLOWANY] but in PRODUCTION it will be [IsAdminUser]
     serializer_class = ShowRoomSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['balance', 'title']

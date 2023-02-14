@@ -1,14 +1,15 @@
+import jwt
+from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
 from rest_framework import generics, status
-from customer.serializers import RegisterSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+
 from customer.models import User
+from customer.serializers import RegisterSerializer
 from customer.utils import Util
-from django.contrib.sites.shortcuts import get_current_site
-from django.urls import reverse
-import jwt
-from django.conf import settings
 
 
 class RegisterView(generics.GenericAPIView):
