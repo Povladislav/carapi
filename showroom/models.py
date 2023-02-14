@@ -1,14 +1,13 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django_countries.fields import CountryField
 
 from car.models import Car
-from customer.models import DateMixin, IsActiveMixin
+from customer.models import DateMixin, IsActiveMixin, Location
 
 
 class ShowRoom(IsActiveMixin, DateMixin):
     title = models.CharField(max_length=50, unique=True)
-    country = CountryField()
+    country = models.ForeignKey(Location, on_delete=models.CASCADE)
     balance = models.DecimalField(max_digits=8, decimal_places=0, validators=[MinValueValidator(0)])
     year_of_establishment = models.DateTimeField()
     preferable_cars = models.ManyToManyField('car.PreferableCar', related_name='preferable_cars', blank=True)

@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
+from django_countries.fields import CountryField
 
 
 class DateMixin(models.Model):
@@ -15,6 +16,10 @@ class IsActiveMixin(models.Model):
 
     class Meta:
         abstract = True
+
+
+class Location(models.Model):
+    country = CountryField()
 
 
 class Customer(DateMixin, IsActiveMixin):

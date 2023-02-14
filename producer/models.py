@@ -1,13 +1,12 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django_countries.fields import CountryField
 
-from customer.models import DateMixin, IsActiveMixin
+from customer.models import DateMixin, IsActiveMixin, Location
 
 
 class Producer(IsActiveMixin, DateMixin):
     title = models.CharField(max_length=50, unique=True)
-    country = CountryField()
+    country = models.ForeignKey(Location, on_delete=models.CASCADE)
     year_of_establishment = models.DateTimeField()
     discount = models.ManyToManyField('showroom.Discount', related_name='discount_for_showroom', blank=True)
     history = models.ManyToManyField('History', related_name='history_of_producer', blank=True)
