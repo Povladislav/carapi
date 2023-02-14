@@ -20,7 +20,7 @@ class ShowRoom(IsActiveMixin, DateMixin):
 
 
 class History(IsActiveMixin, DateMixin):
-    buyer_customer = models.ForeignKey('customer.Customer', on_delete=models.CASCADE, related_name='buyer_customer',
+    buyer_customer = models.ForeignKey('customer.User', on_delete=models.CASCADE, related_name='buyer_customer',
                                        null=True)
     buyer_showroom = models.ForeignKey('showroom.ShowRoom', on_delete=models.CASCADE, related_name='buyer_showroom',
                                        null=True)

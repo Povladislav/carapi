@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
 class DateMixin(models.Model):
@@ -17,10 +18,12 @@ class IsActiveMixin(models.Model):
         abstract = True
 
 
-class Customer(DateMixin, IsActiveMixin):
-    balance = models.DecimalField(validators=[MinValueValidator(0)], decimal_places=0, max_digits=6)
-    info = models.CharField(max_length=200)
+class User(AbstractUser, DateMixin, IsActiveMixin):
+    email = models.EmailField(max_length=44, unique=True, db_index=True)
+    balance = models.DecimalField(validators=[MinValueValidator(0)], decimal_places=0, max_digits=6, null=True)
+    is_verified = models.BooleanField(default=False)
+    info = models.CharField(max_length=200, null=True)
     purchased_cars = models.ManyToManyField('car.Car', blank=True)
 
     def __str__(self):
-        return f'Customer{self.id}'
+        return self.username

@@ -27,6 +27,7 @@ DEBUG = True
 from datetime import timedelta
 
 ALLOWED_HOSTS = ['*']
+AUTH_USER_MODEL = 'customer.User'
 if DEBUG:
     import socket  # only if you haven't already imported this
 
@@ -176,3 +177,8 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=30),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+EMAIL_USE_SSL = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
