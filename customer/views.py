@@ -1,5 +1,3 @@
-import jwt
-from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import (DjangoUnicodeDecodeError, force_str,
                                    smart_bytes, smart_str)
@@ -15,7 +13,7 @@ from customer.serializers import (EmailVerificationSerializer,
                                   ResetPasswordEmailRequestSerializer,
                                   SetNewPasswordSerializer)
 from customer.services import (building_url_register, building_url_reset,
-                               check_token)
+                               check_token, verify_email)
 
 
 class RegisterView(generics.GenericAPIView):
@@ -41,17 +39,7 @@ class VerifyEmail(views.APIView):
     @swagger_auto_schema(manual_parameters=[token_param_config])
     def get(self, request):
         token = request.GET.get('token')
-        try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=settings.SIMPLE_JWT['ALGORITHM'])
-            user = User.objects.get(id=payload['user_id'])
-            if not user.is_verified:
-                user.is_verified = True
-                user.save()
-            return Response({'email': 'Successfully activated!'}, status=status.HTTP_200_OK)
-        except jwt.ExpiredSignatureError as identifier:
-            return Response({'error': 'Activation link expired!'}, status=status.HTTP_400_BAD_REQUEST)
-        except jwt.exceptions.DecodeError as identifier:
-            return Response({'error': 'Invalid token!'}, status=status.HTTP_400_BAD_REQUEST)
+        verify_email(token)
 
 
 class RequestPasswordResetEmail(generics.GenericAPIView):

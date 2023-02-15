@@ -1,3 +1,5 @@
+import jwt
+from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
@@ -48,3 +50,17 @@ def check_token(uidb64, token):
     except DjangoUnicodeDecodeError:
         return Response({'error': 'Token is not valid anymore! Please request a new one'},
                         status=status.HTTP_401_UNAUTHORIZED)
+
+
+def verify_email(token):
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=settings.SIMPLE_JWT['ALGORITHM'])
+        user = User.objects.get(id=payload['user_id'])
+        if not user.is_verified:
+            user.is_verified = True
+            user.save()
+        return Response({'email': 'Successfully activated!'}, status=status.HTTP_200_OK)
+    except jwt.ExpiredSignatureError as identifier:
+        return Response({'error': 'Activation link expired!'}, status=status.HTTP_400_BAD_REQUEST)
+    except jwt.exceptions.DecodeError as identifier:
+        return Response({'error': 'Invalid token!'}, status=status.HTTP_400_BAD_REQUEST)
