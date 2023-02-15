@@ -14,7 +14,18 @@ services:
       - .env.dev
     depends_on:
       - db
-
+  redis:
+    image: redis
+    restart: always
+  worker:
+    restart: always
+    build:
+      context: .
+    volumes:
+      - ./customer:/app/src/customer
+    command: [ 'celery','-A','api','worker' ]
+    env_file:
+      - .env.dev
   db:
     image: postgres
     ports:

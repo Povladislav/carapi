@@ -14,6 +14,7 @@ from customer.serializers import (EmailVerificationSerializer,
                                   SetNewPasswordSerializer)
 from customer.services import (building_url_register, building_url_reset,
                                check_token, verify_email)
+from customer.tasks import add
 
 
 class RegisterView(generics.GenericAPIView):
@@ -21,6 +22,7 @@ class RegisterView(generics.GenericAPIView):
 
     def post(self, request):
         user = request.data
+        add.delay()
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
