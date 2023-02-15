@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import MinValueValidator
 from django.db import models
 from django_countries.fields import CountryField
@@ -19,10 +19,23 @@ class IsActiveMixin(models.Model):
         abstract = True
 
 
+class UserManager(BaseUserManager):
+    def create_user(self, username, email, password=None):
+        if username is None:
+            raise TypeError("User should have a username!")
+        if email is None:
+            raise TypeError("User should have an email!")
+        user = self.model(username=username, email=self.normalize_email(email))
+        user.set_password(password)
+        user.save()
+        return user
+
+
 class User(AbstractUser, DateMixin, IsActiveMixin):
     email = models.EmailField(max_length=44, unique=True, db_index=True)
     balance = models.DecimalField(validators=[MinValueValidator(0)], decimal_places=0, max_digits=6, null=True)
     is_verified = models.BooleanField(default=False)
+    objects = UserManager()
 
 
 class Location(models.Model):
