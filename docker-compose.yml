@@ -26,6 +26,15 @@ services:
     command: [ 'celery','-A','api','worker' ]
     env_file:
       - .env.dev
+  celery-beats:
+    restart: always
+    build:
+      context: .
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    command: [ 'celery', '-A' ,'api' ,'beat', '-l' ,'INFO', '--scheduler','django_celery_beat.schedulers:DatabaseScheduler' ]
+    env_file:
+      - .env.dev
   db:
     image: postgres
     ports:

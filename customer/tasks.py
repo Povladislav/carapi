@@ -1,6 +1,7 @@
 from celery import shared_task
+from customer.models import User
 
 
 @shared_task
-def add():
-    print('rwq')
+def customer_buy_car():
+    pass

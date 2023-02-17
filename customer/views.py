@@ -1,17 +1,13 @@
-import jwt
-from django.conf import settings
+
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status, views
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from customer.models import User
 from customer.serializers import *
-
-from customer.tasks import add
-
 from customer.services import building_url_register, building_url_restore
+from customer.tasks import *
 
 
 class RegisterView(generics.GenericAPIView):
@@ -20,7 +16,6 @@ class RegisterView(generics.GenericAPIView):
 
     def post(self, request):
         user = request.data
-        add.delay()
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
