@@ -1,13 +1,12 @@
 from django.urls import path
 
-from customer.views import (PasswordTokenCheckAPI, RegisterView,
-                            RequestPasswordResetEmail, SetNewPasswordAPIView,
-                            VerifyEmail)
+from customer.views import (EnterNewPasswordView, PasswordRestoreView,
+                            RegisterView, ResetPasswordView, VerifyEmail)
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name="register"),
-    path('password-reset/<uidb64>/<token>/', PasswordTokenCheckAPI.as_view(), name="password-reset-confirm"),
-    path('request-reset-email', RequestPasswordResetEmail.as_view(), name='request-reset-email'),
-    path('password-reset-complete', SetNewPasswordAPIView.as_view(), name='password-reset-complete'),
-    path('email-verify/', VerifyEmail.as_view(), name="email-verify")
+    path('reset-password', ResetPasswordView.as_view(), name="reset-password"),
+    path('restore-password', PasswordRestoreView.as_view(), name="restore-password"),
+    path('email-verify/', VerifyEmail.as_view(), name="email-verify"),
+    path('password-verify/', EnterNewPasswordView.as_view(), name="password-verify")
 ]

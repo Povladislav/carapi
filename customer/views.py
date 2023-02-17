@@ -1,24 +1,22 @@
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.encoding import (DjangoUnicodeDecodeError, force_str,
-                                   smart_bytes, smart_str)
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+import jwt
+from django.conf import settings
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status, views
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from customer.models import User
-from customer.serializers import (EmailVerificationSerializer,
-                                  RegisterSerializer,
-                                  ResetPasswordEmailRequestSerializer,
-                                  SetNewPasswordSerializer)
-from customer.services import (building_url_register, building_url_reset,
-                               check_token, verify_email)
+from customer.serializers import *
+
 from customer.tasks import add
+
+from customer.services import building_url_register, building_url_restore
 
 
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
+    permission_classes = [AllowAny]
 
     def post(self, request):
         user = request.data
@@ -29,43 +27,65 @@ class RegisterView(generics.GenericAPIView):
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
         building_url_register(user, request)
-
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class VerifyEmail(views.APIView):
     serializer_class = EmailVerificationSerializer
+    permission_classes = [AllowAny]
     token_param_config = openapi.Parameter('token', in_=openapi.IN_QUERY, description='Description',
                                            type=openapi.TYPE_STRING)
 
     @swagger_auto_schema(manual_parameters=[token_param_config])
     def get(self, request):
         token = request.GET.get('token')
-        verify_email(token)
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=settings.SIMPLE_JWT['ALGORITHM'])
+            user = User.objects.get(id=payload['user_id'])
+            if not user.is_verified:
+                user.is_verified = True
+                user.save()
+            return Response({'email': 'Successfully activated!'}, status=status.HTTP_200_OK)
+        except jwt.ExpiredSignatureError as identifier:
+            return Response({'error': 'Activation link expired!'}, status=status.HTTP_400_BAD_REQUEST)
+        except jwt.exceptions.DecodeError as identifier:
+            return Response({'error': 'Invalid token!'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class RequestPasswordResetEmail(generics.GenericAPIView):
-    serializer_class = ResetPasswordEmailRequestSerializer
-
-    def post(self, request):
-        email = request.data['email']
-        if User.objects.filter(email=email).exists():
-            user = User.objects.get(email=email)
-            uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
-            token = PasswordResetTokenGenerator().make_token(user)
-            building_url_reset(uidb64, request, token, user)
-        return Response({'success': 'We have sent you a link to reset your password!'}, status=status.HTTP_200_OK)
-
-
-class PasswordTokenCheckAPI(generics.GenericAPIView):
-    def get(self, request, uidb64, token):
-        check_token(uidb64, token)
-
-
-class SetNewPasswordAPIView(generics.GenericAPIView):
-    serializer_class = SetNewPasswordSerializer
+class ResetPasswordView(generics.GenericAPIView):
+    serializer_class = PasswordCreateSerializer
 
     def patch(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response({'success': True, 'message': 'Password reset success '}, status=status.HTTP_200_OK)
+
+
+class PasswordRestoreView(generics.GenericAPIView):
+    serializer_class = PasswordRestoreSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user_data = serializer.data
+        user = User.objects.get(email=user_data['email'])
+        building_url_restore(user, request)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class EnterNewPasswordView(generics.GenericAPIView):
+    serializer_class = EnterPasswordSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        token = request.GET.get('token')
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=settings.SIMPLE_JWT['ALGORITHM'])
+        user = User.objects.get(id=payload['user_id'])
+        user_data = serializer.data
+        user.set_password(user_data.get('new_password'))
+        user.save()
+
+        return Response({'success', 'Password successfully changed!'}, 200)

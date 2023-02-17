@@ -1,7 +1,5 @@
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.encoding import (DjangoUnicodeDecodeError, force_str,
-                                   smart_bytes, smart_str)
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+import jwt
+from django.conf import settings
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 
@@ -12,7 +10,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=22, min_length=6, write_only=True)
 
     def validate(self, attrs):
-        email = attrs.get('email', '')
         username = attrs.get('username', '')
 
         if not username.isalnum():
@@ -35,33 +32,49 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
         fields = ['token']
 
 
-class ResetPasswordEmailRequestSerializer(serializers.Serializer):
+class PasswordCreateSerializer(serializers.Serializer):
+    new_password = serializers.CharField(min_length=6, max_length=68, write_only=True)
+    token = serializers.CharField(min_length=1, write_only=True)
+
+    def validate(self, attrs):
+        token = attrs.get('token')
+        password = attrs.get('new_password')
+
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=settings.SIMPLE_JWT['ALGORITHM'])
+        except Exception as e:
+            raise AuthenticationFailed('The reset link is invalid', 401)
+        user = User.objects.get(id=payload['user_id'])
+
+        if not user.is_verified:
+            raise serializers.ValidationError('User is not verified!')
+        user.set_password(password)
+        user.save()
+        return (user)
+
+    class Meta:
+        fields = ['new_password', 'new_token']
+
+
+class PasswordRestoreSerializer(serializers.Serializer):
     email = serializers.EmailField(min_length=2)
+
+    def validate(self, attrs):
+        try:
+            email = attrs.get('email')
+        except Exception as e:
+            raise serializers.ValidationError('Cannot find email!', 401)
+        return attrs
 
     class Meta:
         fields = ['email']
 
 
-class SetNewPasswordSerializer(serializers.Serializer):
-    password = serializers.CharField(min_length=6, max_length=68, write_only=True)
-    token = serializers.CharField(min_length=1, write_only=True)
-    uidb64 = serializers.CharField(min_length=1, write_only=True)
+class EnterPasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(min_length=6, max_length=68, write_only=True)
 
     def validate(self, attrs):
-        try:
-            password = attrs.get('password')
-            token = attrs.get('token')
-            uidb64 = attrs.get('uidb64')
-            id = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(id=id)
-
-            if not PasswordResetTokenGenerator().check_token(user, token):
-                raise AuthenticationFailed('The reset link is invalid', 401)
-            user.set_password(password)
-            user.save()
-            return (user)
-        except  Exception as e:
-            raise AuthenticationFailed('The reset link is invalid', 401)
+        return super().validate(attrs)
 
     class Meta:
-        fields = ['password', 'token', 'uidb64']
+        fields = ['new_password']
