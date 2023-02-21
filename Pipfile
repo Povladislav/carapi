@@ -43,6 +43,7 @@ django-debug-toolbar = "*"
 celery = "*"
 redis = "*"
 django-celery-beat = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

@@ -25,10 +25,11 @@ class AvailableCar(IsActiveMixin, DateMixin):
     count = models.SmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(20)])
     showroom = models.ForeignKey('showroom.ShowRoom', on_delete=models.CASCADE,
                                  related_name='available_cars_for_showroom',
-                                 null=True)
+                                 null=True, blank=True)
     producer = models.ForeignKey('producer.Producer', on_delete=models.CASCADE,
-                                 related_name='available_cars_for_producer', null=True)
+                                 related_name='available_cars_for_producer', null=True, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=0, validators=[MinValueValidator(0)])
+    discount = models.ForeignKey('showroom.Discount', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.available_car.name

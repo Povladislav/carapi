@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
 
 from car.models import Car
 from customer.models import DateMixin, IsActiveMixin, Location
@@ -20,9 +21,9 @@ class ShowRoom(IsActiveMixin, DateMixin):
 
 class History(IsActiveMixin, DateMixin):
     buyer_customer = models.ForeignKey('customer.User', on_delete=models.CASCADE, related_name='buyer_customer',
-                                       null=True)
+                                       null=True, blank=True)
     buyer_showroom = models.ForeignKey('showroom.ShowRoom', on_delete=models.CASCADE, related_name='buyer_showroom',
-                                       null=True)
+                                       null=True, blank=True)
     count = models.SmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(20)])
     whole_price = models.DecimalField(max_digits=6, decimal_places=0, validators=[MinValueValidator(0)])
     sold_car = models.ManyToManyField('car.Car', related_name='sold_car')
@@ -33,8 +34,8 @@ class History(IsActiveMixin, DateMixin):
 
 class Discount(IsActiveMixin, DateMixin):
     car = models.ForeignKey('car.Car', on_delete=models.CASCADE)
-    date_of_start = models.DateField()
-    date_of_end = models.DateField()
+    date_of_start = models.DateField(default=timezone.now)
+    date_of_end = models.DateField(default=timezone.now)
     size = models.DecimalField(max_digits=3, decimal_places=2, validators=[MinValueValidator(0), MaxValueValidator(1)])
 
     def __str__(self):
