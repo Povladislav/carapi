@@ -56,7 +56,6 @@ services:
     build: ./nginx
     volumes:
       - static:/static
-      - ./nginx-conf.d:/etc/nginx/conf.d
     ports:
       - "10080:80"
       - "10443:443"
