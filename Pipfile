@@ -44,6 +44,7 @@ celery = "*"
 redis = "*"
 django-celery-beat = "*"
 python-dotenv = "*"
+gunicorn = "*"
 
 [dev-packages]
 
