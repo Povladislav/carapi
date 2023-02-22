@@ -19,7 +19,7 @@ producers = Producer.objects.all()
 @shared_task
 def customer_buy_car():
     for user in users_with_offers:
-        if user.balance >= user.offer.price:
+        if user.balance >= user.offer.price and user.is_verified:
             for car in cars_for_customer:
                 if user.offer.preferable_car == car.available_car and user.offer.price <= car.price and car.count > 0:
                     if car.discount is None:
@@ -118,3 +118,6 @@ def showroom_buy_car():
                     AvailableCar.objects.get(available_car=most_benefit_car.available_car).delete()
 
 
+@shared_task
+def test_task():
+    print("test")
