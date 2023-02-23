@@ -8,6 +8,7 @@ from customer.models import User
 from showroom.models import History, ShowRoom, Discount
 from producer.models import Producer
 from django.db.models import Q
+from django.db import transaction
 
 users_with_offers = User.objects.filter(offer__count__isnull=False)
 cars_for_customer = AvailableCar.objects.filter(showroom__isnull=False)
@@ -17,6 +18,7 @@ producers = Producer.objects.all()
 
 
 @shared_task
+@transaction.atomic
 def customer_buy_car():
     for user in users_with_offers:
         if user.balance >= user.offer.price and user.is_verified:
@@ -50,6 +52,7 @@ def customer_buy_car():
 
 
 @shared_task
+@transaction.atomic
 def showroom_buy_car():
     most_benefit_car = None
     final_price = None
@@ -119,5 +122,6 @@ def showroom_buy_car():
 
 
 @shared_task
+@transaction.atomic
 def test_task():
-    print("test")
+    print('test')
