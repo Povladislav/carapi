@@ -43,12 +43,19 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser, DateMixin, IsActiveMixin):
     email = models.EmailField(max_length=44, unique=True, db_index=True)
-    balance = models.DecimalField(validators=[MinValueValidator(0)], decimal_places=0, max_digits=6, null=True)
+    balance = models.DecimalField(
+        validators=[MinValueValidator(0)], decimal_places=0, max_digits=6, null=True
+    )
     is_verified = models.BooleanField(default=False)
     info = models.CharField(max_length=200)
-    offer = models.ForeignKey('car.PreferableCar', on_delete=models.CASCADE, null=True, blank=True,
-                              related_name='offer')
-    purchased_cars = models.ManyToManyField('car.Car', blank=True)
+    offer = models.ForeignKey(
+        "car.PreferableCar",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="offer",
+    )
+    purchased_cars = models.ManyToManyField("car.Car", blank=True)
     objects = UserManager()
 
     def __str__(self):

@@ -5,6 +5,6 @@ from rest_framework import routers
 from producer.views import ProducerViewSet
 
 router = routers.SimpleRouter()
-router.register(r'producers', ProducerViewSet)
+router.register(r"producers", ProducerViewSet)
 
 urlpatterns = router.urls

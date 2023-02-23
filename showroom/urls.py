@@ -5,6 +5,6 @@ from rest_framework import routers
 from showroom.views import ShowRoomViewSet
 
 router = routers.SimpleRouter()
-router.register(r'showrooms', ShowRoomViewSet)
+router.register(r"showrooms", ShowRoomViewSet)
 
 urlpatterns = router.urls

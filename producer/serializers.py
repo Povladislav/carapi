@@ -7,4 +7,4 @@ from producer.models import Producer
 class ProducerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producer
-        fields = '__all__'
+        fields = "__all__"
