@@ -7,10 +7,11 @@ from car.models import AvailableCar, PreferableCar
 from customer.models import User
 from showroom.models import History, ShowRoom, Discount
 from producer.models import Producer
-from django.db.models import Q
+from django.db.models import Q, F
 from django.db import transaction
 
-users_with_offers = User.objects.filter(offer__count__isnull=False)
+users_with_offers = User.objects.filter(offer__count__isnull=False, is_verified=True,
+                                        balance__gte=F('offer__price'))
 cars_for_customer = AvailableCar.objects.filter(showroom__isnull=False)
 cars_for_showroom = AvailableCar.objects.filter(producer__isnull=False)
 showrooms = ShowRoom.objects.exclude(preferable_cars__count__isnull=True)
@@ -21,34 +22,31 @@ producers = Producer.objects.all()
 @transaction.atomic
 def customer_buy_car():
     for user in users_with_offers:
-        if user.balance >= user.offer.price and user.is_verified:
-            for car in cars_for_customer:
-                if user.offer.preferable_car == car.available_car and user.offer.price <= car.price and car.count > 0:
-                    if car.discount is None:
-                        user.purchased_cars.add(car.available_car)
-                        car.count -= 1
-                        user.balance -= car.price
-                        history = History.objects.create(buyer_customer=user, count=1, whole_price=car.price)
-                        history.sold_car.add(car.available_car)
-                        car.showroom.history.add(history)
-                        car.showroom.balance += car.price
-                        car.showroom.save()
-                        car.save()
-                        user.save()
+        for car in cars_for_customer:
+            if user.offer.preferable_car == car.available_car and user.offer.price <= car.price and car.count > 0 and car.discount is None:
+                user.purchased_cars.add(car.available_car)
+                car.count -= 1
+                user.balance -= car.price
+                history = History.objects.create(buyer_customer=user, count=1, whole_price=car.price)
+                history.sold_car.add(car.available_car)
+                car.showroom.history.add(history)
+                car.showroom.balance += car.price
+                car.showroom.save()
+                car.save()
+                user.save()
 
-                    elif car.discount is not None:
-                        if timezone.now().date() > car.discount.date_of_start and car.discount.date_of_end > timezone.now().date():
-                            total_price = car.price * car.discount.size
-                            user.purchased_cars.add(car.available_car)
-                            car.count -= 1
-                            user.balance -= total_price
-                            history = History.objects.create(buyer_customer=user, count=1, whole_price=car.price)
-                            history.sold_car.add(car.available_car)
-                            car.showroom.balance += total_price
-                            car.showroom.save()
-                            car.showroom.history.add(history)
-                            car.save()
-                            user.save()
+            elif car.discount is not None and timezone.now().date() > car.discount.date_of_start and car.discount.date_of_end > timezone.now().date():
+                total_price = car.price * car.discount.size
+                user.purchased_cars.add(car.available_car)
+                car.count -= 1
+                user.balance -= total_price
+                history = History.objects.create(buyer_customer=user, count=1, whole_price=car.price)
+                history.sold_car.add(car.available_car)
+                car.showroom.balance += total_price
+                car.showroom.save()
+                car.showroom.history.add(history)
+                car.save()
+                user.save()
 
 
 @shared_task
@@ -119,9 +117,3 @@ def showroom_buy_car():
                     showroom.save()
                     p_car.save()
                     AvailableCar.objects.get(available_car=most_benefit_car.available_car).delete()
-
-
-@shared_task
-@transaction.atomic
-def test_task():
-    print('test')
