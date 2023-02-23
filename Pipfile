@@ -45,6 +45,7 @@ redis = "*"
 django-celery-beat = "*"
 python-dotenv = "*"
 gunicorn = "*"
+pre-commit = "*"
 
 [dev-packages]
 
