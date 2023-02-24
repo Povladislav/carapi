@@ -49,10 +49,10 @@ def customer_buy_car():
     for user in users_with_offers:
         for car in cars_for_customer:
             if (
-                user.offer.preferable_car == car.available_car
-                and user.offer.price <= car.price
-                and car.count > 0
-                and car.discount is None
+                    user.offer.preferable_car == car.available_car
+                    and user.offer.price <= car.price
+                    and car.count > 0
+                    and car.discount is None
             ):
                 user.purchased_cars.add(car.available_car)
                 car.count -= 1
@@ -68,9 +68,9 @@ def customer_buy_car():
                 user.save()
 
             elif (
-                car.discount is not None
-                and timezone.now().date() > car.discount.date_of_start
-                and car.discount.date_of_end > timezone.now().date()
+                    car.discount is not None
+                    and timezone.now().date() > car.discount.date_of_start
+                    and car.discount.date_of_end > timezone.now().date()
             ):
                 total_price = car.price * car.discount.size
                 user.purchased_cars.add(car.available_car)
@@ -94,7 +94,7 @@ def showroom_buy_car():
         for p_car in showroom.preferable_cars.all():
             most_benefit_car = iterator(showroom, p_car)
             if most_benefit_car is not None and int(p_car.count) == int(
-                most_benefit_car.count
+                    most_benefit_car.count
             ):
                 most_benefit_car.producer = None
                 most_benefit_car.showroom = showroom
