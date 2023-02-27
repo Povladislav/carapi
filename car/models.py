@@ -11,13 +11,12 @@ class Car(DateMixin, IsActiveMixin):
         HORSES350 = 350
         HORSES420 = 420
 
-    name = models.CharField(max_length=15)
     model = models.ForeignKey("ModelName", on_delete=models.CASCADE)
     color = models.ForeignKey("Color", on_delete=models.CASCADE)
     power = models.CharField(choices=POWER.choices, max_length=15, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.model.title
 
 
 class AvailableCar(IsActiveMixin, DateMixin):
@@ -47,7 +46,7 @@ class AvailableCar(IsActiveMixin, DateMixin):
     )
 
     def __str__(self):
-        return self.available_car.name
+        return self.available_car.model.title
 
 
 class PreferableCar(IsActiveMixin, DateMixin):
@@ -56,7 +55,7 @@ class PreferableCar(IsActiveMixin, DateMixin):
     count = models.DecimalField(max_digits=2, decimal_places=0)
 
     def __str__(self):
-        return self.preferable_car.name
+        return self.preferable_car.model.title
 
 
 class ModelName(models.Model):

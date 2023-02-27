@@ -31,15 +31,23 @@ def iterator(showroom, p_car):
             ).first()
             if discount is not None:
                 final_price = a_car.price * discount.size
-            else:
-                final_price = a_car.price
-        if final_price <= p_car.price and showroom.balance >= p_car.price * p_car.count:
-            if most_benefit_car is None:
-                most_benefit_car = a_car
-                most_benefit_car.price = final_price
-            elif most_benefit_car is not None and a_car.price <= most_benefit_car.price:
-                most_benefit_car = a_car
-                most_benefit_car.price = final_price
+                if final_price <= p_car.price and showroom.balance >= p_car.price * p_car.count:
+                    if most_benefit_car is None:
+                        most_benefit_car = a_car
+                        most_benefit_car.price = final_price
+                    elif most_benefit_car is not None and a_car.price <= most_benefit_car.price:
+                        most_benefit_car = a_car
+                        most_benefit_car.price = final_price
+            return most_benefit_car
+        else:
+            final_price = a_car.price
+            if final_price <= p_car.price and showroom.balance >= p_car.price * p_car.count:
+                if most_benefit_car is None:
+                    most_benefit_car = a_car
+                    most_benefit_car.price = final_price
+                elif most_benefit_car is not None and a_car.price <= most_benefit_car.price:
+                    most_benefit_car = a_car
+                    most_benefit_car.price = final_price
     return most_benefit_car
 
 
@@ -50,7 +58,7 @@ def customer_buy_car():
         for car in cars_for_customer:
             if (
                     user.offer.preferable_car == car.available_car
-                    and user.offer.price <= car.price
+                    and user.offer.price >= car.price
                     and car.count > 0
                     and car.discount is None
             ):
@@ -66,6 +74,7 @@ def customer_buy_car():
                 car.showroom.save()
                 car.save()
                 user.save()
+                break
 
             elif (
                     car.discount is not None
@@ -85,6 +94,7 @@ def customer_buy_car():
                 car.showroom.history.add(history)
                 car.save()
                 user.save()
+                break
 
 
 @shared_task
@@ -100,7 +110,6 @@ def showroom_buy_car():
                 most_benefit_car.showroom = showroom
                 most_benefit_car.price = round(float(most_benefit_car.price) / 0.7)
                 showroom.balance -= most_benefit_car.price * most_benefit_car.count
-                PreferableCar.objects.get(preferable_car=p_car.preferable_car).delete()
                 history = History.objects.create(
                     buyer_showroom=showroom,
                     count=p_car.count,
@@ -111,13 +120,11 @@ def showroom_buy_car():
                 showroom.history.add(history)
                 showroom.save()
                 most_benefit_car.save()
+                break
 
             elif int(p_car.count) < int(most_benefit_car.count):
                 most_benefit_car.count -= p_car.count
                 showroom.balance -= p_car.count * most_benefit_car.price
-                showroom.preferable_cars.filter(
-                    preferable_car=p_car.preferable_car
-                ).delete()
                 showroom.save()
                 most_benefit_car.save()
                 AvailableCar.objects.create(
@@ -134,7 +141,7 @@ def showroom_buy_car():
                 history.sold_car.add(p_car.preferable_car)
                 history.save()
                 showroom.history.add(history)
-                PreferableCar.objects.get(preferable_car=p_car).delete()
+                break
             elif int(p_car.count) > int(most_benefit_car.count):
                 AvailableCar.objects.create(
                     available_car=most_benefit_car.available_car,
@@ -157,3 +164,4 @@ def showroom_buy_car():
                 AvailableCar.objects.get(
                     available_car=most_benefit_car.available_car
                 ).delete()
+                break

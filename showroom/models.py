@@ -58,9 +58,8 @@ class Discount(IsActiveMixin, DateMixin):
     car = models.ForeignKey("car.Car", on_delete=models.CASCADE)
     date_of_start = models.DateField(default=timezone.now)
     date_of_end = models.DateField(default=timezone.now)
-    size = models.DecimalField(
-        max_digits=3,
-        decimal_places=2,
+    size = models.IntegerField(
+
         validators=[MinValueValidator(0), MaxValueValidator(1)],
     )
 
