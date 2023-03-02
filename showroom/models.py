@@ -59,7 +59,6 @@ class Discount(IsActiveMixin, DateMixin):
     date_of_start = models.DateField(default=timezone.now)
     date_of_end = models.DateField(default=timezone.now)
     size = models.IntegerField(
-
         validators=[MinValueValidator(0), MaxValueValidator(1)],
     )
 

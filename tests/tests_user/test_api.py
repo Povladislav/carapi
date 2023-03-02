@@ -19,21 +19,15 @@ def test_user(user):
 
 def test_register_user():
     payload = dict(
-        username="harryPotter2",
-        email="nu2@gmail.com",
-        password="user232323"
+        username="harryPotter2", email="nu2@gmail.com", password="user232323"
     )
     response = client.post(reverse("register"), payload)
     assert response.status_code == 201
-    assert response.data.get('username') == "harryPotter2"
+    assert response.data.get("username") == "harryPotter2"
 
 
 def test_register_the_same_user(user):
-    payload = dict(
-        username="harryPotter",
-        email="nu2@gmail.com",
-        password="user2"
-    )
+    payload = dict(username="harryPotter", email="nu2@gmail.com", password="user2")
     response = client.post(reverse("register"), payload)
 
     assert response.status_code != 200
@@ -53,7 +47,7 @@ def test_login_user(user):
 def test_verify_email(user):
     client.force_authenticate(user)
     token = jwt.encode({"user_id": user.id}, secret_key, algorithm="HS256")
-    payload = jwt.decode(token, secret_key, algorithms=['HS256'])
+    payload = jwt.decode(token, secret_key, algorithms=["HS256"])
     response = client.get(reverse("email-verify"), {"token": token})
     assert payload["user_id"] == user.id
     assert response.data.get("email") == "Successfully activated!"

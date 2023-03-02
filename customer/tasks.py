@@ -31,21 +31,33 @@ def iterator(showroom, p_car):
             ).first()
             if discount is not None:
                 final_price = a_car.price * discount.size
-                if final_price <= p_car.price and showroom.balance >= p_car.price * p_car.count:
+                if (
+                    final_price <= p_car.price
+                    and showroom.balance >= p_car.price * p_car.count
+                ):
                     if most_benefit_car is None:
                         most_benefit_car = a_car
                         most_benefit_car.price = final_price
-                    elif most_benefit_car is not None and a_car.price <= most_benefit_car.price:
+                    elif (
+                        most_benefit_car is not None
+                        and a_car.price <= most_benefit_car.price
+                    ):
                         most_benefit_car = a_car
                         most_benefit_car.price = final_price
             return most_benefit_car
         else:
             final_price = a_car.price
-            if final_price <= p_car.price and showroom.balance >= p_car.price * p_car.count:
+            if (
+                final_price <= p_car.price
+                and showroom.balance >= p_car.price * p_car.count
+            ):
                 if most_benefit_car is None:
                     most_benefit_car = a_car
                     most_benefit_car.price = final_price
-                elif most_benefit_car is not None and a_car.price <= most_benefit_car.price:
+                elif (
+                    most_benefit_car is not None
+                    and a_car.price <= most_benefit_car.price
+                ):
                     most_benefit_car = a_car
                     most_benefit_car.price = final_price
     return most_benefit_car
@@ -57,10 +69,10 @@ def customer_buy_car():
     for user in users_with_offers:
         for car in cars_for_customer:
             if (
-                    user.offer.preferable_car == car.available_car
-                    and user.offer.price >= car.price
-                    and car.count > 0
-                    and car.discount is None
+                user.offer.preferable_car == car.available_car
+                and user.offer.price >= car.price
+                and car.count > 0
+                and car.discount is None
             ):
                 user.purchased_cars.add(car.available_car)
                 car.count -= 1
@@ -77,9 +89,9 @@ def customer_buy_car():
                 break
 
             elif (
-                    car.discount is not None
-                    and timezone.now().date() > car.discount.date_of_start
-                    and car.discount.date_of_end > timezone.now().date()
+                car.discount is not None
+                and timezone.now().date() > car.discount.date_of_start
+                and car.discount.date_of_end > timezone.now().date()
             ):
                 total_price = car.price * car.discount.size
                 user.purchased_cars.add(car.available_car)
@@ -104,7 +116,7 @@ def showroom_buy_car():
         for p_car in showroom.preferable_cars.all():
             most_benefit_car = iterator(showroom, p_car)
             if most_benefit_car is not None and int(p_car.count) == int(
-                    most_benefit_car.count
+                most_benefit_car.count
             ):
                 most_benefit_car.producer = None
                 most_benefit_car.showroom = showroom

@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     "customer.apps.CustomerConfig",
     "showroom.apps.ShowroomConfig",
     "car.apps.CarConfig",
-    "scripts"
+    "scripts",
 ]
 
 MIDDLEWARE = [
