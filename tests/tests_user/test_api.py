@@ -4,7 +4,6 @@ import jwt
 import pytest
 from django.urls import reverse
 from rest_framework.test import APIClient
-from rest_framework_simplejwt.tokens import RefreshToken
 
 client = APIClient()
 pytestmark = pytest.mark.django_db
