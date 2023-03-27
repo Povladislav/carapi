@@ -47,6 +47,7 @@ python-dotenv = "*"
 gunicorn = "*"
 pre-commit = "*"
 pytest-django = "*"
+pytest = "*"
 
 [dev-packages]
 

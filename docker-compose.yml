@@ -46,11 +46,12 @@ services:
       - .env
   flower:
     image: mher/flower:0.9.7
-    command: [ 'flower', '--broker=redis://redis:6379', '--port=5555' ]
+    command: [ 'celery', '--broker=redis://redis:6379','flower', '--port=5555' ]
     ports:
       - "5555:5555"
     depends_on:
       - redis
+      - worker
   nginx:
     build: ./nginx
     volumes:
@@ -58,6 +59,8 @@ services:
     ports:
       - "10080:80"
       - "10443:443"
+    env_file:
+      - .env
     depends_on:
       - app
       - flower

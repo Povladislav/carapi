@@ -1,12 +1,12 @@
-name: Demo Workflow
-on: [workflow_dispatch]
+name: Test App
+on: push
 jobs:
-  print:
+  testing:
     runs-on: ubuntu-latest
     steps:
-      - name: Print to console
-        run: echo Hello GitHub Actions
-      - name: Print a few lines
-        run: |
-          echo First line
-
+      - name: Get the repos code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: pipenv install --dev --system --deploy
+      - name: Test application
+        run: pytest .
