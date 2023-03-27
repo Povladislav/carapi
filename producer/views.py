@@ -11,15 +11,19 @@ class ProducerFilter(FilterSet):
     class Meta:
         model = Producer
         fields = {
-            'title': ['icontains'],
-            'year_of_establishment': ['icontains'],
+            "title": ["icontains"],
+            "year_of_establishment": ["icontains"],
         }
 
 
 class ProducerViewSet(ModelViewSet):
     queryset = Producer.objects.all()
     serializer_class = ProducerSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['title']
-    ordering_fields = ['title', 'year_of_establishment']
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    search_fields = ["title"]
+    ordering_fields = ["title", "year_of_establishment"]
     filterset_class = ProducerFilter

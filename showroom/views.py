@@ -10,16 +10,17 @@ from showroom.serializers import ShowRoomSerializer
 class SRFilter(FilterSet):
     class Meta:
         model = ShowRoom
-        fields = {
-            'balance': ['lt', 'gt'],
-            'title': ['icontains']
-        }
+        fields = {"balance": ["lt", "gt"], "title": ["icontains"]}
 
 
 class ShowRoomViewSet(ModelViewSet):
     queryset = ShowRoom.objects.all()
     serializer_class = ShowRoomSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['balance', 'title']
-    ordering_fields = ['balance']
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    search_fields = ["balance", "title"]
+    ordering_fields = ["balance"]
     filterset_class = SRFilter
