@@ -9,7 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 client = APIClient()
 pytestmark = pytest.mark.django_db
 
-secret_key = os.environ.get("SECRET_KEY")
+secret_key = os.environ.get("SECRET_KEY", "3232sf@fdsasvb")
 
 
 def test_user(user):
