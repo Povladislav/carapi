@@ -51,8 +51,8 @@ class AvailableCar(IsActiveMixin, DateMixin):
 
 class PreferableCar(IsActiveMixin, DateMixin):
     preferable_car = models.ForeignKey("car.Car", on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=6, decimal_places=0)
-    count = models.DecimalField(max_digits=2, decimal_places=0)
+    price = models.DecimalField(max_digits=6, decimal_places=0, validators=[MinValueValidator(0)])
+    count = models.DecimalField(max_digits=2, decimal_places=0, validators=[MinValueValidator(0)])
 
     def __str__(self):
         return self.preferable_car.model.title

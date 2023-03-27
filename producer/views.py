@@ -19,6 +19,7 @@ class ProducerFilter(FilterSet):
 class ProducerViewSet(ModelViewSet):
     queryset = Producer.objects.all()
     serializer_class = ProducerSerializer
+    permission_classes = [IsAdminUser]
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,

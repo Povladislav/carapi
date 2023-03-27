@@ -4,7 +4,7 @@ from scripts.populate_db import *
 
 
 class Command(BaseCommand):
-    help = 'Populating our DBase'
+    help = "Populating our DBase"
 
     # def add_arguments(self, parser):
     #     ...
