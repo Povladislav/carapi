@@ -8,7 +8,7 @@ from rest_framework.test import APIClient
 client = APIClient()
 pytestmark = pytest.mark.django_db
 
-secret_key = "django-insecure-drp0!*s9xxjyt%f#@d+8ojy*)t^341iqnx6ry5$f_4p%7et_oj"
+secret_key = os.environ.get("SECRET_KEY")
 
 
 def test_user(user):
