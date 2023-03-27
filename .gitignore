@@ -1,2 +1,5 @@
 __pycache__
-.env.dev
+.env
+.idea
+venv
+.pytest_cache
