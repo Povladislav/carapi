@@ -9,6 +9,7 @@ client = APIClient()
 pytestmark = pytest.mark.django_db
 
 secret_key = os.environ.get("SECRET_KEY")
+super_secret = "21323@@!!cdsvcxs!@edcfgr3$"
 
 
 def test_user(user):
@@ -45,8 +46,8 @@ def test_login_user(user):
 
 def test_verify_email(user):
     client.force_authenticate(user)
-    token = jwt.encode({"user_id": user.id}, secret_key, algorithm="HS256")
-    payload = jwt.decode(token, secret_key, algorithms=["HS256"])
+    token = jwt.encode({"user_id": user.id}, super_secret, algorithm="HS256")
+    payload = jwt.decode(token, super_secret, algorithms=["HS256"])
     response = client.get(reverse("email-verify"), {"token": token})
     assert payload["user_id"] == user.id
     assert response.data.get("email") == "Successfully activated!"
