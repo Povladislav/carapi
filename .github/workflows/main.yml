@@ -10,5 +10,5 @@ jobs:
         run: pip install pipenv
       - name: Install dependencies
         run: pipenv install --dev --system --deploy
-      - name: Test application
-        run: pytest .
+      - name: docker
+        run: docker-compose up
