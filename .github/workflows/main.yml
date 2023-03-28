@@ -12,6 +12,7 @@ jobs:
         uses: isbang/compose-action@v1.4.1
         with:
           down-flags: "--volumes"
+          up-flags: "--build"
           services: |
             app
             db
