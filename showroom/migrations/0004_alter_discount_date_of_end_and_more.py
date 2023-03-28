@@ -7,31 +7,42 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('showroom', '0003_remove_showroom_available_cars'),
+        ("showroom", "0003_remove_showroom_available_cars"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='discount',
-            name='date_of_end',
+            model_name="discount",
+            name="date_of_end",
             field=models.DateField(default=django.utils.timezone.now),
         ),
         migrations.AlterField(
-            model_name='discount',
-            name='date_of_start',
+            model_name="discount",
+            name="date_of_start",
             field=models.DateField(default=django.utils.timezone.now),
         ),
         migrations.AlterField(
-            model_name='history',
-            name='buyer_customer',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='buyer_customer', to=settings.AUTH_USER_MODEL),
+            model_name="history",
+            name="buyer_customer",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="buyer_customer",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
-            model_name='history',
-            name='buyer_showroom',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='buyer_showroom', to='showroom.showroom'),
+            model_name="history",
+            name="buyer_showroom",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="buyer_showroom",
+                to="showroom.showroom",
+            ),
         ),
     ]

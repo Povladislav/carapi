@@ -6,7 +6,7 @@ from showroom.models import ShowRoom
 class ShowRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShowRoom
-        exclude = ('history', 'preferable_cars')
+        exclude = ("history", "preferable_cars")
 
 
 class ShowRoomSerializerForAdmin(serializers.ModelSerializer):

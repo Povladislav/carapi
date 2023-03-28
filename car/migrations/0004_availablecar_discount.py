@@ -5,16 +5,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('showroom', '0003_remove_showroom_available_cars'),
-        ('car', '0003_alter_availablecar_producer_and_more'),
+        ("showroom", "0003_remove_showroom_available_cars"),
+        ("car", "0003_alter_availablecar_producer_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='availablecar',
-            name='discount',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='showroom.discount'),
+            model_name="availablecar",
+            name="discount",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="showroom.discount",
+            ),
         ),
     ]

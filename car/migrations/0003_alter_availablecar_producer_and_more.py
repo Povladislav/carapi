@@ -5,22 +5,33 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('producer', '0001_initial'),
-        ('showroom', '0003_remove_showroom_available_cars'),
-        ('car', '0002_initial'),
+        ("producer", "0001_initial"),
+        ("showroom", "0003_remove_showroom_available_cars"),
+        ("car", "0002_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='availablecar',
-            name='producer',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='available_cars_for_producer', to='producer.producer'),
+            model_name="availablecar",
+            name="producer",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="available_cars_for_producer",
+                to="producer.producer",
+            ),
         ),
         migrations.AlterField(
-            model_name='availablecar',
-            name='showroom',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='available_cars_for_showroom', to='showroom.showroom'),
+            model_name="availablecar",
+            name="showroom",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="available_cars_for_showroom",
+                to="showroom.showroom",
+            ),
         ),
     ]

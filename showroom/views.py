@@ -28,13 +28,13 @@ class ShowRoomViewSet(ModelViewSet):
     filterset_class = SRFilter
 
     def get_permissions(self):
-        if self.action == 'list':
+        if self.action == "list":
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAdminUser]
         return [permission() for permission in permission_classes]
 
-    @action(detail=True, methods=['GET'], permission_classes=[IsAdminUser])
+    @action(detail=True, methods=["GET"], permission_classes=[IsAdminUser])
     def get_showrooms(self, request):
         showrooms = ShowRoom.objects.all()
         serializer = ShowRoomSerializerForAdmin(showrooms, many=True)

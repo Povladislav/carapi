@@ -5,15 +5,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('showroom', '0004_alter_discount_date_of_end_and_more'),
+        ("showroom", "0004_alter_discount_date_of_end_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='discount',
-            name='size',
-            field=models.IntegerField(validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(1)]),
+            model_name="discount",
+            name="size",
+            field=models.IntegerField(
+                validators=[
+                    django.core.validators.MinValueValidator(0),
+                    django.core.validators.MaxValueValidator(1),
+                ]
+            ),
         ),
     ]

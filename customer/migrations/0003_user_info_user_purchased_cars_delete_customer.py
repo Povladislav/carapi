@@ -4,25 +4,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('car', '0002_initial'),
-        ('customer', '0002_alter_user_managers'),
+        ("car", "0002_initial"),
+        ("customer", "0002_alter_user_managers"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='info',
+            model_name="user",
+            name="info",
             field=models.CharField(default=1, max_length=200),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='user',
-            name='purchased_cars',
-            field=models.ManyToManyField(blank=True, to='car.car'),
+            model_name="user",
+            name="purchased_cars",
+            field=models.ManyToManyField(blank=True, to="car.car"),
         ),
         migrations.DeleteModel(
-            name='Customer',
+            name="Customer",
         ),
     ]

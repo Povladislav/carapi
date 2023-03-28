@@ -5,45 +5,92 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('car', '0001_initial'),
-        ('customer', '0001_initial'),
-        ('showroom', '0001_initial'),
+        ("car", "0001_initial"),
+        ("customer", "0001_initial"),
+        ("showroom", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='History',
+            name="History",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateField(auto_now=True)),
-                ('updated_at', models.DateField(auto_now_add=True)),
-                ('is_active', models.BooleanField(default=True)),
-                ('buyer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='showroom_buyer', to='showroom.showroom')),
-                ('sold_car', models.ManyToManyField(related_name='sold_car_for_showroom', to='car.car')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateField(auto_now=True)),
+                ("updated_at", models.DateField(auto_now_add=True)),
+                ("is_active", models.BooleanField(default=True)),
+                (
+                    "buyer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="showroom_buyer",
+                        to="showroom.showroom",
+                    ),
+                ),
+                (
+                    "sold_car",
+                    models.ManyToManyField(
+                        related_name="sold_car_for_showroom", to="car.car"
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Producer',
+            name="Producer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateField(auto_now=True)),
-                ('updated_at', models.DateField(auto_now_add=True)),
-                ('is_active', models.BooleanField(default=True)),
-                ('title', models.CharField(max_length=50, unique=True)),
-                ('year_of_establishment', models.DateTimeField()),
-                ('country', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='customer.location')),
-                ('discount', models.ManyToManyField(blank=True, related_name='discount_for_showroom', to='showroom.discount')),
-                ('history', models.ManyToManyField(blank=True, related_name='history_of_producer', to='producer.history')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateField(auto_now=True)),
+                ("updated_at", models.DateField(auto_now_add=True)),
+                ("is_active", models.BooleanField(default=True)),
+                ("title", models.CharField(max_length=50, unique=True)),
+                ("year_of_establishment", models.DateTimeField()),
+                (
+                    "country",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="customer.location",
+                    ),
+                ),
+                (
+                    "discount",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="discount_for_showroom",
+                        to="showroom.discount",
+                    ),
+                ),
+                (
+                    "history",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="history_of_producer",
+                        to="producer.history",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

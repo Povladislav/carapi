@@ -8,5 +8,9 @@ router = routers.SimpleRouter()
 router.register(r"showrooms", ShowRoomViewSet)
 
 urlpatterns = [
-                  path("a_showrooms/", ShowRoomViewSet.as_view({"get": "get_showrooms"}), name="show_showrooms")
-              ] + router.urls
+    path(
+        "a_showrooms/",
+        ShowRoomViewSet.as_view({"get": "get_showrooms"}),
+        name="show_showrooms",
+    )
+] + router.urls

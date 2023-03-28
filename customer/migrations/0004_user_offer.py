@@ -5,16 +5,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('car', '0002_initial'),
-        ('customer', '0003_user_info_user_purchased_cars_delete_customer'),
+        ("car", "0002_initial"),
+        ("customer", "0003_user_info_user_purchased_cars_delete_customer"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='offer',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='offer', to='car.preferablecar'),
+            model_name="user",
+            name="offer",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="offer",
+                to="car.preferablecar",
+            ),
         ),
     ]
