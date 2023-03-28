@@ -10,7 +10,7 @@ services:
     volumes:
       - .:/code
     env_file:
-      - .env
+      - .env-non-dev
     depends_on:
       - db
   redis:
@@ -35,7 +35,7 @@ services:
       - ./:/code/
     command: [ 'celery', '-A' ,'api' ,'beat', '-l' ,'INFO', '--scheduler','django_celery_beat.schedulers:DatabaseScheduler' ]
     env_file:
-      - .env
+      - .env-non-dev
   db:
     image: postgres
     ports:
@@ -43,7 +43,7 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     env_file:
-      - .env
+      - .env-non-dev
   flower:
     image: mher/flower:0.9.7
     command: [ 'celery', '--broker=redis://redis:6379','flower', '--port=5555' ]
