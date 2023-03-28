@@ -17,3 +17,5 @@ jobs:
           services: |
             app
             db
+      - name: Run tests
+        run: pytest .
