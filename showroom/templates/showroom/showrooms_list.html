@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Showrooms List{% endblock %}
+
+{% block content %}
+<ul>
+    {% for showroom in showrooms %}
+        <li>
+            <h2>{{ showroom.title }}</h2>
+            <p><strong>Balance:</strong> {{ showroom.balance }}</p>
+            <p><strong>Description:</strong> {{ showroom.description }}</p>
+            <a href="{% url 'showroom_detail' showroom.id %}">View Details</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producer Detail</title>
+</head>
+<body>
+    <h1>Producer Details</h1>
+    <h2>{{ producer.title }}</h2>
+    <p>Year of Establishment: {{ producer.year_of_establishment }}</p>
+    <a href="{% url 'producers_list' %}">Back to list</a>
+</body>
+</html>

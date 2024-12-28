@@ -1,19 +1,5 @@
-from django_filters.rest_framework import DjangoFilterBackend, FilterSet
-from rest_framework import filters
+from django.shortcuts import render
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
-
-from showroom.models import ShowRoom
-from showroom.serializers import ShowRoomSerializer, ShowRoomSerializerForAdmin
-
-
-class SRFilter(FilterSet):
-    class Meta:
-        model = ShowRoom
-        fields = {"balance": ["lt", "gt"], "title": ["icontains"]}
-
 
 class ShowRoomViewSet(ModelViewSet):
     queryset = ShowRoom.objects.all()
@@ -34,8 +20,14 @@ class ShowRoomViewSet(ModelViewSet):
             permission_classes = [IsAdminUser]
         return [permission() for permission in permission_classes]
 
-    @action(detail=True, methods=["GET"], permission_classes=[IsAdminUser])
-    def get_showrooms(self, request):
-        showrooms = ShowRoom.objects.all()
-        serializer = ShowRoomSerializerForAdmin(showrooms, many=True)
-        return Response(serializer.data)
+    @action(detail=False, methods=["GET"], url_path='html-list', permission_classes=[AllowAny])
+    def html_list(self, request):
+        """Эндпоинт для отображения HTML-страницы со списком шоурумов."""
+        showrooms = self.get_queryset()
+        return render(request, 'showroom/showrooms_list.html', {'showrooms': showrooms})
+
+    @action(detail=True, methods=["GET"], url_path='html-detail', permission_classes=[AllowAny])
+    def html_detail(self, request, pk=None):
+        """Эндпоинт для отображения HTML-страницы с деталями шоурума."""
+        showroom = get_object_or_404(ShowRoom, pk=pk)
+        return render(request, 'showroom/showroom_detail.html', {'showroom': showroom})

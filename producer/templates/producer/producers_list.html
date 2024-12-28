@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producers List</title>
+</head>
+<body>
+    <h1>List of Producers</h1>
+    <ul>
+        {% for producer in producers %}
+            <li>
+                <a href="{% url 'producer_detail' producer.id %}">
+                    {{ producer.title }}
+                </a> ({{ producer.year_of_establishment }})
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

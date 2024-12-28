@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ showroom.title }} Details{% endblock %}
+
+{% block content %}
+<h1>{{ showroom.title }}</h1>
+<p><strong>Balance:</strong> {{ showroom.balance }}</p>
+<p><strong>Description:</strong> {{ showroom.description }}</p>
+<a href="{% url 'showrooms_list' %}">Back to list</a>
+{% endblock %}
